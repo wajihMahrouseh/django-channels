@@ -25,13 +25,13 @@ SECRET_KEY = 'django-insecure-vg2u3srluzas3%y*8^_*g@@-+#lyys#u0ocv1o5%p($&%wmb0%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    'channels',
+    'daphne',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'corsheaders',
 
     'chat'
 ]
@@ -51,7 +53,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ALLOW_ALL_ORIGINS = True  # Allow requests from all origins
 
 ROOT_URLCONF = 'real_time_chat.urls'
 
@@ -73,6 +79,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'real_time_chat.wsgi.application'
 ASGI_APPLICATION = 'real_time_chat.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases

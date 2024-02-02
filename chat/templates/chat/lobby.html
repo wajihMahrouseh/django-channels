@@ -1,21 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat</title>
-  </head>
-  <body>
+</head>
+<body>
     <h1>Let's Chat!</h>
+    <form id="form">
+        <input type="text" name="message" />
+        <div id="messages"></div>
+    </form>
     <script type="text/javascript">
+        console.log('WebSocket connection will running')
+
         let url = `ws://${window.location.host}/ws/socket-server/`
-        
+
         const chatSokect = new WebSocket(url)
+        console.log('url: ', url)
+
+        chatSokect.onopen = function(event) {
+            console.log('WebSocket connection established.');
+        };
+
+        chatSokect.onerror = function(error) {
+            console.error('WebSocket error: ', error);
+        };
 
         chatSokect.onmessage = function(e){
             let data = JSON.parse(e.data)
             console.log('Data: ', data)
+
+            if(data.type === 'chat'){
+                let messages = document.getElementById('messages')
+                messages.insertAdjacentHTML('beforeEnd',`<div><p>${data.message}</p></div>`)
+
+            }
         }
+
+        let form = document.getElementById('form')
+        form.addEventListener('submit', (e) => {
+            e.preventDefault()
+            let message = e.target.message.value
+            chatSokect.send(JSON.stringify({
+                'message': message
+            }))
+            form.reset()
+
+            chatSokect.onclose = function(event) {
+                console.log('WebSocket connection closed.');
+            };
+        })
     </script>
-  </body>
+</body>
 </html>

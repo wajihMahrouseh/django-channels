@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat</title>
+  </head>
+  <body>
+    <h1>Let's Chat!</h>
+    <script type="text/javascript">
+        let url = `ws://${window.location.host}/ws/socket-server/`
+        
+        const chatSokect = new WebSocket(url)
+
+        chatSokect.onmessage = function(e){
+            let data = JSON.parse(e.data)
+            console.log('Data: ', data)
+        }
+    </script>
+  </body>
+</html>
